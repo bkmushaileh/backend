@@ -13,9 +13,12 @@ export const getAllAuthors = async (
     if (!authors || authors.length === 0) {
       return next({ status: 404, message: "No authors were found!" });
     }
-    res.json(authors);
+    return res.json({
+      message: "All authors",
+      authors,
+    });
   } catch (error) {
-    return next({ status: 500, message: "Something went wrong!" });
+    return serverError(next);
   }
 };
 
@@ -25,11 +28,14 @@ export const getAuthorByID = async (
   next: NextFunction
 ) => {
   try {
-    const author = await Author.findById(req.params.id);
+    const author = await Author.findById(req.params.id).populate("books");
     if (!author) {
       return next({ status: 404, message: "Author not found!" });
     }
-    res.json(author);
+    return res.json({
+      message: "Author by ID",
+      author,
+    });
   } catch (error) {
     return serverError(next);
   }
@@ -47,8 +53,11 @@ export const createAuthor = async (
       return next({ status: 404, message: "Author not found!" });
     }
 
-    await newAuthor.save();
-    return res.status(201).json("Author has been created successfully!");
+    newAuthor.save();
+    return res.status(201).json({
+      message: "Author has been created successfully!",
+      author: newAuthor,
+    });
   } catch (error) {
     return serverError(next);
   }
@@ -71,8 +80,10 @@ export const updateAuthor = async (
       author.name = name;
     }
     await author.save();
-
-    return res.json("Author has been updated sucessfully!");
+    return res.json({
+      message: "Author has been updated successfully!",
+      author,
+    });
   } catch (error) {
     return serverError(next);
   }
@@ -90,7 +101,10 @@ export const deleteAuthor = async (
       return next({ status: 404, message: "Author not found!" });
     }
     await author.deleteOne();
-    return res.json("Author has been deleted successfully!");
+    return res.json({
+      message: "Author has been deleted successfully!",
+      author,
+    });
   } catch (error) {
     return serverError(next);
   }

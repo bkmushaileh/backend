@@ -11,10 +11,13 @@ export const getAllBooks = async (
 ) => {
   try {
     const books = await Book.find().populate(["author", "categories"]);
-    if (!books) {
+    if (!books || books.length === 0) {
       return next({ status: 404, message: "No books were found!" });
     }
-    return res.json(books);
+    return res.json({
+      message: "All books",
+      books,
+    });
   } catch (error) {
     return serverError(next);
   }
@@ -26,11 +29,14 @@ export const getBookByID = async (
 ) => {
   const { id } = req.params;
   try {
-    const book = Book.findById(id).populate(["book"]);
+    const book = await Book.findById(id).populate(["author", "categories"]);
     if (!book) {
       return next({ status: 404, message: "No books were found!" });
     }
-    return res.json(book);
+    return res.json({
+      message: "Book by ID",
+      book,
+    });
   } catch (error) {
     return serverError(next);
   }
@@ -62,7 +68,7 @@ export const createBook = async (
       { _id: { $in: categories } },
       { $addToSet: { books: book.id } }
     );
-    return res.status(201).json("Book has been created successfully!");
+    return res.status(201).json(book);
   } catch (error) {
     console.log(error);
     return serverError(next);
@@ -84,7 +90,7 @@ export const updateBookDetails = async (
     }
     book.title = title;
     await book.save();
-    return res.json("Book has been updated sucessfully!");
+    return res.json({ message: "Book has been updated successfully!", book });
   } catch (error) {
     return serverError(next);
   }
@@ -98,12 +104,23 @@ export const deleteBook = async (
   const { id } = req.params;
 
   try {
-    const book = Book.findById(id);
+    const book = await Book.findById(id);
+
     if (!book) {
       return next({ status: 404, message: "Book not found!" });
     }
+    await Author.findByIdAndUpdate(book.author, {
+      $pull: { books: book._id },
+    });
+    await Category.updateMany(
+      { _id: { $in: book.categories } },
+      { $pull: { books: book._id } }
+    );
     await book.deleteOne();
-    return res.json("Book has been deleted successfully!");
+    return res.json({
+      message: "Book has been deleted successfully!",
+      book,
+    });
   } catch (error) {
     return serverError(next);
   }
