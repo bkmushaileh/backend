@@ -1,0 +1,16 @@
+{
+  "root": [
+    "./src/app.ts",
+    "./src/controllers/author.controller.ts",
+    "./src/db/models/config.ts",
+    "./src/db/models/connectdb.ts",
+    "./src/db/models/models/author.ts",
+    "./src/db/models/models/book.ts",
+    "./src/db/models/models/category.ts",
+    "./src/db/models/models/config.ts",
+    "./src/middleware/errorhandler.ts",
+    "./src/middleware/notfound.ts",
+    "./src/routes/author.router.ts"
+  ],
+  "version": "5.8.3"
+}

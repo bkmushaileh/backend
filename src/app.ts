@@ -11,10 +11,10 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
-app.use(errorHandler);
 
 app.use("/authors", authorsRouter);
 
+app.use(errorHandler);
 app.use(notFound);
 
 app.listen(process.env.PORT, () => {
