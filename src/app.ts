@@ -5,6 +5,8 @@ import cors from "cors";
 import { notFound } from "./Middleware/notFound";
 import { errorHandler } from "./Middleware/errorHandler";
 import authorsRouter from "./Routes/author.router";
+import categoryRouter from "./Routes/category.router";
+import bookRouter from "./Routes/book.router";
 
 connectDB();
 const app = express();
@@ -13,6 +15,8 @@ app.use(morgan("dev"));
 app.use(cors());
 
 app.use("/authors", authorsRouter);
+app.use("/categories", categoryRouter);
+app.use("/books", bookRouter);
 
 app.use(errorHandler);
 app.use(notFound);

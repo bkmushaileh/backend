@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import Author from "../DB/Models/Models/Author";
 import Book from "../DB/Models/Models/Book";
+import { serverError } from "../Middleware/serverError";
 
 export const getAllAuthors = async (
   req: Request,
@@ -31,7 +32,7 @@ export const getAuthorByID = async (
     }
     res.json(author);
   } catch (error) {
-    return next({ status: 500, message: "Something went wrong!" });
+    return serverError(next);
   }
 };
 
@@ -50,7 +51,7 @@ export const createAuthor = async (
     await newAuthor.save();
     return res.status(201).json("Author has been created successfully!");
   } catch (error) {
-    return next({ status: 500, message: "Something went wrong!" });
+    return serverError(next);
   }
 };
 
@@ -72,9 +73,9 @@ export const updateAuthor = async (
     }
     await author.save();
 
-    return res.json("Author has been updated!");
+    return res.json("Author has been updated sucessfully!");
   } catch (error) {
-    return next({ status: 500, message: "Something went wrong!" });
+    return serverError(next);
   }
 };
 
@@ -92,6 +93,6 @@ export const deleteAuthor = async (
     await author.deleteOne();
     return res.json("Author has been deleted successfully!");
   } catch (error) {
-    return next({ status: 500, message: "Something went wrong!" });
+    return serverError(next);
   }
 };
