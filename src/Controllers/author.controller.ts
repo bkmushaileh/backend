@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import Author from "../DB/Models/Models/Author";
-import Book from "../DB/Models/Models/Book";
 import { serverError } from "../Middleware/serverError";
 
 export const getAllAuthors = async (

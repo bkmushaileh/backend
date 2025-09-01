@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
-    "@types/morgan": "^1.9.10"
+    "@types/morgan": "^1.9.10",
+    "@types/multer": "^2.0.0"
   }
 }
